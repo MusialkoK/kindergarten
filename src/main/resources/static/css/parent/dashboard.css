@@ -1,0 +1,43 @@
+li {
+    display: inline;
+}
+
+html {
+    background-color: #ffdca2 !important;
+    font-family: "Segoe UI Light";
+    height: 100%;
+}
+
+body {
+    background-color: #ffdca2 !important;
+}
+
+button {
+    background-color: #DCA2FF;
+    padding: 20px;
+    display: inline-block;
+    border: none;
+    font-family: "Segoe UI Light";
+    font-size: x-large;
+    font-weight: bold;
+    width: 400px;
+    height: 200px;
+    margin: 50px;
+    border-radius: 30px;
+}
+
+button:hover {
+    background-color: #A2FFDC;
+}
+
+button:active, button:focus {
+    outline: none;
+}
+
+form {
+    display: inline;
+}
+
+h1{
+    margin-left: 90px;
+}

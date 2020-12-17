@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface ChildRepository extends JpaRepository<Child, Long> {
     Child getById(long id);
-    List<Child> getChildrenByGuardiansContaining(User user);
+    List<Child> getChildrenByParentContaining(User user);
 }

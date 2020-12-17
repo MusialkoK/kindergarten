@@ -5,13 +5,20 @@ import org.springframework.stereotype.Service;
 import pl.com.happyhouse.krzeptow.model.Absence;
 import pl.com.happyhouse.krzeptow.repository.AbsenceRepository;
 
+
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AbsenceService {
 
     private final AbsenceRepository absenceRepository;
 
-    private Absence save(Absence absence){
+    public Absence save(Absence absence){
         return absenceRepository.save(absence);
+    }
+
+    public List<Absence> saveAll(List<Absence> absences){
+        return absenceRepository.saveAll(absences);
     }
 }

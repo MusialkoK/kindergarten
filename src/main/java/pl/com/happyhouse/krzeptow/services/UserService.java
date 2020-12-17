@@ -18,7 +18,12 @@ public class UserService {
     }
 
     public User getById(long id){
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id).get();
     }
+
+    public User getByUsername(String username){
+        return userRepository.findByEmail(username).get();
+    }
+
 
 }

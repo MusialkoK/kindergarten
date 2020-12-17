@@ -25,6 +25,6 @@ public class ChildService {
 
     public List<Child> getByGuardianId(long id){
         User user = userService.getById(id);
-        return childRepository.getChildrenByGuardiansContaining(user);
+        return childRepository.getChildrenByParentContaining(user);
     }
 }

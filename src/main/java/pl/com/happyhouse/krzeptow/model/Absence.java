@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -18,11 +17,13 @@ import java.time.LocalDate;
 public class Absence {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToOne
     private Child child;
     @OneToOne
     private User reporter;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     private String description;
 }

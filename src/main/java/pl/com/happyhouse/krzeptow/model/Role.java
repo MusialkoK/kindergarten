@@ -2,6 +2,8 @@ package pl.com.happyhouse.krzeptow.model;
 
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Role {
 
     @Id
@@ -20,4 +24,11 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private List<User> users;
     private String description;
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "description='" + description + '\'' +
+                '}';
+    }
 }

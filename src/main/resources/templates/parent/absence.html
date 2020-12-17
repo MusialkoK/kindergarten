@@ -20,7 +20,15 @@
 <body>
 <h1>Lorem ipsum</h1>
 <div id="mdp-demo"></div>
-<form
-<p id="datesOutput"></p>
+
+<form th:action="@{/parent/absence}" th:method="'post'" th:object="${absenceDTO}">
+    <div th:each="child: ${children}">
+        <input type="checkbox" th:field="*{children}" th:value="${child}">
+        <span th:text="${child.getFullName()}"></span>
+    </div>
+    <input type="text" th:field="*{description}">
+    <input type="text" th:field="*{dates}" id=DatesLabel>
+    <input type="submit" value="OK">
+</form>
 </body>
 </html>

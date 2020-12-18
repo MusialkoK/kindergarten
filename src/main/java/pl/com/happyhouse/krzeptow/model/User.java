@@ -33,4 +33,9 @@ public class User {
     @ManyToMany
     @JoinColumn(name = "student_id")
     private List<Child> students;
+
+    @Override
+    public String toString() {
+        return name + " " + surname;
+    }
 }

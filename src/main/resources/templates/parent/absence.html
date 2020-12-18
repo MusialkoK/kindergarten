@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Absence</title>
@@ -24,7 +24,7 @@
 <h2>Dotyczy:</h2>
 <form th:action="@{/parent/absence}" th:method="'post'" th:object="${absenceDTO}">
     <div th:each="child: ${children}" class="group">
-        <input type="checkbox" th:field="*{children}" th:value="${child}" name="cb" th:checked="${children.size()==1}">
+        <input type="checkbox" th:field="*{children}" th:value="${child.id}" name="cb" th:checked="${children.size()==1}">
         <label th:for="${#ids.prev('children')}" th:text="${child.getFullName()}"></label>
     </div>
     <h2>W jakie dni dziecko/dzieci NIE BĘDĄ w przedszkolu?</h2>

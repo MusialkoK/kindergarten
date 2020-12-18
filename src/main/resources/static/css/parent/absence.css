@@ -1,0 +1,41 @@
+.calendar{
+    margin-left: 50px;
+}
+
+.group{
+    margin-left: 50px;
+}
+
+label{
+    font-weight: bold;
+    font-size: large;
+}
+
+input[type="submit"] {
+    background-color: #DCA2FF;
+    padding: 20px;
+    display: inline-block;
+    border: none;
+    font-family: "Segoe UI Light";
+    font-size: large;
+    font-weight: bold;
+    width: 160px;
+    height: 80px;
+    margin: 50px;
+    border-radius: 12px;
+}
+
+input[type="submit"]:hover {
+    background-color: #A2FFDC;
+}
+
+input[type="submit"]:active, input[type="submit"]:focus {
+    outline: none;
+}
+
+#description{
+    width: 400px;
+    height: 200px;
+    margin-left: 50px;
+
+}

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotEmpty;
 import pl.com.happyhouse.krzeptow.model.Child;
 
 import java.util.List;
@@ -14,7 +15,9 @@ import java.util.List;
 @Data
 @Builder
 public class AbsenceDTO {
+    @NotEmpty
     private List<Child> children;
+    @NotEmpty
     private String dates;
     private String description;
 }

@@ -31,17 +31,27 @@ public class ParentController {
     private final ChildService childService;
     private final RoleService roleService;
     private final MealPlanService mealPlanService;
+    private final MealChangeService mealChangeService;
 
     @GetMapping("")
     public String dashboard() {
-            return "parent/dashboard";
+        return "parent/dashboard";
     }
 
     @PostMapping("/reports")
     public String reports() {
 //        createDatabaseEntries();
 //        createMealPlanEntries();
+        addMealChange();
         return "parent/reports";
+    }
+
+    private void addMealChange() {
+        MealChange mealChange = MealChange.builder()
+                .newMealPlan(mealPlanService.getById(2L))
+                .child(childService.getById(1L))
+                .build();
+        mealChangeService.save(mealChange);
     }
 
 
@@ -60,7 +70,7 @@ public class ParentController {
 
     @PostMapping("/absence")
     public String registerAbsences(@Valid @ModelAttribute AbsenceDTO createdAbsenceDTO, BindingResult bindingResult, Principal principal, Model model) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             User user = userService.getByUsername(principal.getName());
             List<String> errorMsg = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -69,7 +79,7 @@ public class ParentController {
             model.addAttribute("absenceDTO", createdAbsenceDTO);
             model.addAttribute("children", user.getChildren());
             return "parent/absence";
-        }else{
+        } else {
             List<Absence> absences = multiAbsenceFactory.create(createdAbsenceDTO, userService.getByUsername(principal.getName()));
             absences.forEach(absenceService::save);
             return "parent/dashboard";
@@ -89,7 +99,7 @@ public class ParentController {
                 .build());
     }
 
-    private void createDatabaseEntries(){
+    private void createDatabaseEntries() {
         roleService.save(Role.builder()
                 .roleName("ROLE_TEACHER")
                 .description("teacher")

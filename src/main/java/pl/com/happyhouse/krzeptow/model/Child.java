@@ -31,6 +31,9 @@ public class Child {
     @ManyToMany(mappedBy = "students")
     private List<User> teachers;
 
+    @ManyToOne
+    private MealPlan currentMealPlan;
+
     public String getFullName(){
         return name + " " + surname;
     }

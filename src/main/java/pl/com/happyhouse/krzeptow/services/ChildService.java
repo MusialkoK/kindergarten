@@ -3,6 +3,7 @@ package pl.com.happyhouse.krzeptow.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.com.happyhouse.krzeptow.model.Child;
+import pl.com.happyhouse.krzeptow.model.MealChange;
 import pl.com.happyhouse.krzeptow.model.User;
 import pl.com.happyhouse.krzeptow.repository.ChildRepository;
 
@@ -26,5 +27,9 @@ public class ChildService {
     public List<Child> getByGuardianId(long id){
         User user = userService.getById(id);
         return childRepository.getChildrenByParentContaining(user);
+    }
+
+    public void changeMealPlan(MealChange mealChange){
+        mealChange.getChild().setCurrentMealPlan(mealChange.getNewMealPlan());
     }
 }

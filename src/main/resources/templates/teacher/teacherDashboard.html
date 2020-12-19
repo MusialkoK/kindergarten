@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Parent dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/parent/dashboard.css}">
+</head>
+<body>
+<h1>Panel przedszkolanki</h1>
+<div>
+    <ul>
+        <li>
+            <form th:action="@{/templates/teacher/kidsList}" th:method="'post'">
+                <button type="submit">Sprawdź listę dzieci</button>
+            </form>
+        </li>
+        <li>
+            <form th:action="@{/templates/teacher/emailSending}" th:method="'post'">
+                <button type="submit">Wyślij maila do grupy</button>
+            </form>
+        </li>
+        <li>
+            <form th:action="@{/templates/teacher/absenceReport}" th:method="'post'">
+                <button type="submit">Generuj raport obecności</button>
+            </form>
+        </li>
+
+        <br>
+
+        <li>
+            <form action="/logout">
+                <button type="submit">Wyloguj</button>
+            </form>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

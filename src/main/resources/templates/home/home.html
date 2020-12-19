@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/home/home.css}">
+</head>
+<header>
+    <h1 class="logo">HappyHouse</h1>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+
+    <nav>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/contact">Kontakt</a></li>
+            <li><a href="/aboutUs">O nas</a></li>
+            <li><a href="/home">Wydarzenia</a></li>
+            <li sec:authorize="isAnonymous()"><a href="/login">Zaloguj</a></li>
+            <li sec:authorize="hasRole('ROLE_PARENT')"><a href="/parent">Panel użytkownika</a></li>
+            <li sec:authorize="hasRole('ROLE_TEACHER')"><a href="/teacher">Panel nauczyciela</a></li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin">Panel administratora</a></li>
+            <li sec:authorize="isAuthenticated()"><a href="/logout">Wyloguj</a></li>
+
+        </ul>
+    </nav>
+    <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+    </label>
+
+
+</header>
+
+
+<body>
+
+</body>
+</html>

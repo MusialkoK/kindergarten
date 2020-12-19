@@ -14,15 +14,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"child_id", "date"})
+})
 public class Absence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
+
     @OneToOne
+    @JoinColumn(name = "child_id")
     private Child child;
+
     @OneToOne
     private User reporter;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     private String description;

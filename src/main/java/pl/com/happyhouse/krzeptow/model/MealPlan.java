@@ -1,6 +1,7 @@
 package pl.com.happyhouse.krzeptow.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@Builder
 public class MealPlan {
 
     @Id
@@ -23,4 +25,11 @@ public class MealPlan {
     private String description;
 
     private BigDecimal mealPrice;
+
+    private String name;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

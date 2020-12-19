@@ -11,16 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.factory.MultiAbsenceFactory;
-import pl.com.happyhouse.krzeptow.model.Absence;
-import pl.com.happyhouse.krzeptow.model.Child;
-import pl.com.happyhouse.krzeptow.model.Role;
-import pl.com.happyhouse.krzeptow.model.User;
-import pl.com.happyhouse.krzeptow.services.AbsenceService;
-import pl.com.happyhouse.krzeptow.services.ChildService;
-import pl.com.happyhouse.krzeptow.services.RoleService;
-import pl.com.happyhouse.krzeptow.services.UserService;
+import pl.com.happyhouse.krzeptow.model.*;
+import pl.com.happyhouse.krzeptow.services.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +30,7 @@ public class ParentController {
     private final AbsenceService absenceService;
     private final ChildService childService;
     private final RoleService roleService;
+    private final MealPlanService mealPlanService;
 
     @GetMapping("")
     public String dashboard() {
@@ -44,8 +40,10 @@ public class ParentController {
     @PostMapping("/reports")
     public String reports() {
 //        createDatabaseEntries();
+//        createMealPlanEntries();
         return "parent/reports";
     }
+
 
     @PostMapping("/meal")
     public String meal() {
@@ -76,6 +74,19 @@ public class ParentController {
             absences.forEach(absenceService::save);
             return "parent/dashboard";
         }
+    }
+
+    private void createMealPlanEntries() {
+        mealPlanService.save(MealPlan.builder()
+                .name("Standard")
+                .description("Lorem Ipsum")
+                .mealPrice(new BigDecimal(10))
+                .build());
+        mealPlanService.save(MealPlan.builder()
+                .name("Vege")
+                .description("dolor sit amet")
+                .mealPrice(new BigDecimal(15))
+                .build());
     }
 
     private void createDatabaseEntries(){

@@ -79,7 +79,7 @@ nav a {
     color: azure;
     text-decoration: none;
     font-size: 1.2rem;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     opacity: 0;
     transition: opacity 150ms ease-in-out;
 }
@@ -104,11 +104,11 @@ nav a:hover {
 
     header {
         display: grid;
-        grid-template-columns: 1fr auto minmax(600px, 1fr) 1fr;
+        grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr;
     }
 
     .logo {
-        grid-column: 2 / 3;
+        grid-column: 2 / 1;
     }
 
     nav {

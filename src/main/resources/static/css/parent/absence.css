@@ -11,6 +11,10 @@ label{
     font-size: large;
 }
 
+html{
+    font-family: "Segoe UI Light";
+}
+
 input[type="submit"] {
     background-color: #DCA2FF;
     padding: 20px;

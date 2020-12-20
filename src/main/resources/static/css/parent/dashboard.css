@@ -10,6 +10,7 @@ html {
 
 body {
     background-color: #ffdca2 !important;
+
 }
 
 button {
@@ -24,6 +25,8 @@ button {
     height: 200px;
     margin: 50px;
     border-radius: 30px;
+    position: relative;
+    top: 4em;
 }
 
 button:hover {

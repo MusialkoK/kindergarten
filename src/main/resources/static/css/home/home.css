@@ -2,6 +2,16 @@
 :root {
     --menuBackground: rgba(0, 0, 255, .8)
 }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: #ffdca2;
+    font-family: 'Segoe UI Light', sans-serif;
+    font-weight: 400;
+
+}
 
 
 header {
@@ -79,13 +89,12 @@ nav a {
     color: azure;
     text-decoration: none;
     font-size: 1.2rem;
-    /*text-transform: uppercase;*/
     opacity: 0;
     transition: opacity 150ms ease-in-out;
 }
 
 nav a:hover {
-    color: crimson;
+    color: #A2FFDC;
 }
 
 .nav-toggle:checked ~ nav {

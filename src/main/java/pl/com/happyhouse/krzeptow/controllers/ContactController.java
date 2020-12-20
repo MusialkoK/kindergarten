@@ -3,26 +3,14 @@ package pl.com.happyhouse.krzeptow.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/contact")
 @AllArgsConstructor
-public class HomeController {
-
+public class ContactController {
     @GetMapping("")
     public String dashboard(){
-        return "home/home";
-    }
-
-    @PostMapping("/contact")
-    public String contact(){
         return "home/contact";
-    }
-
-    @PostMapping("/oNas")
-    public String aboutUs(){
-        return "home/aboutUs";
     }
 }

@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.happyhouse.krzeptow.model.Child;
-import pl.com.happyhouse.krzeptow.model.MealPlan;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,8 +14,8 @@ import java.util.List;
 @Builder
 public class MealChangeDTO {
 
-    @NotEmpty
-    private MealPlan mealPlan;
-    @NotEmpty
-    private List<Child> children;
+//    @NotEmpty
+    private long selectedMealPlan;
+//    @NotEmpty
+    private List<Child> selectedChildren;
 }

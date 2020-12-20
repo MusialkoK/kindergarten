@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
+import pl.com.happyhouse.krzeptow.factory.MealChangeFactory;
 import pl.com.happyhouse.krzeptow.factory.MultiAbsenceFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
@@ -33,6 +34,7 @@ public class ParentController {
     private final RoleService roleService;
     private final MealPlanService mealPlanService;
     private final MealChangeService mealChangeService;
+    private final MealChangeFactory mealChangeFactory;
 
     @GetMapping("")
     public String dashboard() {
@@ -47,11 +49,32 @@ public class ParentController {
         return "parent/reports";
     }
 
-
     @GetMapping("/mealchange")
-    public String meal(Model model) {
-        model.addAttribute("mealChangeDTO",MealChangeDTO.builder().build());
+    public String meal(Model model, Principal principal) {
+        User user = userService.getByUsername(principal.getName());
+        model.addAttribute("mealChangeDTO", MealChangeDTO.builder().build());
+        model.addAttribute("mealPlans", mealPlanService.getAllPlans());
+        model.addAttribute("children", user.getChildren());
         return "parent/mealChange";
+    }
+
+    @PostMapping("/mealchange")
+    public String mealChange(@Valid @ModelAttribute MealChangeDTO createdMealChangeDTO, BindingResult bindingResult, Principal principal, Model model) {
+        if (bindingResult.hasErrors()) {
+            User user = userService.getByUsername(principal.getName());
+            List<String> errorMsg = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errorMsg", errorMsg);
+            model.addAttribute("mealChangeDTO", createdMealChangeDTO);
+            model.addAttribute("mealPlans", mealPlanService.getAllPlans());
+            model.addAttribute("children", user.getChildren());
+            return "parent/mealChange";
+        } else {
+            List<MealChange> mealChangeList = mealChangeFactory.create(createdMealChangeDTO);
+            mealChangeService.saveAll(mealChangeList);
+            return "parent/dashboard";
+        }
     }
 
     @GetMapping("/absence")
@@ -63,7 +86,8 @@ public class ParentController {
     }
 
     @PostMapping("/absence")
-    public String registerAbsences(@Valid @ModelAttribute AbsenceDTO createdAbsenceDTO, BindingResult bindingResult, Principal principal, Model model) {
+    public String registerAbsences(@Valid @ModelAttribute AbsenceDTO createdAbsenceDTO, BindingResult
+            bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
             User user = userService.getByUsername(principal.getName());
             List<String> errorMsg = bindingResult.getAllErrors().stream()

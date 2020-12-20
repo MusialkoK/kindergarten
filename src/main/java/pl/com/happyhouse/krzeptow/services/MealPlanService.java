@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.com.happyhouse.krzeptow.model.MealPlan;
 import pl.com.happyhouse.krzeptow.repository.MealPlanRepository;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -19,4 +20,7 @@ public class MealPlanService {
 
     public MealPlan getById(Long id){ return mealPlanRepository.getById(id).orElseThrow(NoSuchElementException::new);}
 
+    public List<MealPlan> getAllPlans() {
+        return mealPlanRepository.findAll();
+    }
 }

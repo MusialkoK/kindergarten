@@ -1,9 +1,17 @@
+li {
+    display: inline;
+}
+
 .calendar{
     margin-left: 50px;
 }
 
 .group{
     margin-left: 50px;
+}
+body {
+    background-color: #ffdca2 !important;
+
 }
 
 label{
@@ -12,10 +20,12 @@ label{
 }
 
 html{
+    background-color: #ffdca2 !important;
+    height: 100%;
     font-family: "Segoe UI Light";
 }
 
-input[type="submit"] {
+input[type="submit"], button {
     background-color: #DCA2FF;
     padding: 20px;
     display: inline-block;
@@ -29,11 +39,11 @@ input[type="submit"] {
     border-radius: 12px;
 }
 
-input[type="submit"]:hover {
+input[type="submit"]:hover, button:hover {
     background-color: #A2FFDC;
 }
 
-input[type="submit"]:active, input[type="submit"]:focus {
+input[type="submit"]:active, input[type="submit"]:focus, button:active, buttom:focus {
     outline: none;
 }
 
@@ -42,4 +52,11 @@ input[type="submit"]:active, input[type="submit"]:focus {
     height: 200px;
     margin-left: 50px;
 
+}
+
+form {
+    display: inline;
+}
+h1{
+    margin-left: 90px;
 }

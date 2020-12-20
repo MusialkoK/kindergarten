@@ -5,7 +5,6 @@
     <title>Absence</title>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" th:href="@{/js/Multiple-Dates-Picker/jquery-ui.multidatespicker.css}">
-    <link rel="stylesheet" th:href="@{/css/parent/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/parent/absence.css}">
 
     <script
@@ -32,6 +31,7 @@
     <h2>Jaka jest przyczyna nieobecności? (opcjonalnie)</h2>
     <input type="text" th:field="*{description}" id="description">
     <input type="hidden" th:field="*{dates}" id=DatesLabel><br>
+    <button type="button" onclick="window.history.go(-1);">< Powrót</button>
     <input type="submit" value="Potwierdzam">
 </form>
 </body>

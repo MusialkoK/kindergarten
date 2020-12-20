@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
+import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
 import pl.com.happyhouse.krzeptow.factory.MultiAbsenceFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
@@ -47,9 +48,10 @@ public class ParentController {
     }
 
 
-    @PostMapping("/meal")
-    public String meal() {
-        return "parent/meal";
+    @GetMapping("/mealchange")
+    public String meal(Model model) {
+        model.addAttribute("mealChangeDTO",MealChangeDTO.builder().build());
+        return "parent/mealChange";
     }
 
     @GetMapping("/absence")

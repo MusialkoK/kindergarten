@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/parent/mealchange.css}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function hideDescription(id) {
+            $(".descript").each(function (index) {
+                $(this).hide();
+                if ($(this).data("id") == id) {
+                    $(this).show();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>Zmiana posiłków</h1>
+<form th:action="@{/parent/mealchange}" th:method="'post'" th:object="${mealChangeDTO}">
+    <h2>Wybierz rodzaj posiłku:</h2>
+    <div id="mealSelection">
+        <div th:each="mealPlan: ${mealPlans}" class="group">
+            <input type="radio" th:field="*{selectedMealPlan}" th:value="${mealPlan.id}"
+                   th:onclick="|hideDescription(${mealPlan.getId()})|">
+            <label th:for="${#ids.prev('selectedMealPlan')}" th:text="${mealPlan.getName()}"></label>
+        </div>
+    </div>
+    <div th:each="mealPlan: ${mealPlans}" class="descript" th:attr="data-id=${mealPlan.getId()}" hidden>
+        <h2>Opis posiłku:</h2>
+        <p>
+            <span th:text="${mealPlan.getDescription()}"></span>
+        </p>
+        <h3>Cena: <span th:text="${mealPlan.getMealPrice()}"></span> zł/posiłek</h3>
+    </div>
+    <div id="childSelection">
+        <h2>Dotyczy:</h2>
+        <div th:each="child: ${children}" class="group">
+            <input type="checkbox" th:field="*{selectedChildren}" th:value="${child.id}" name="cb"
+                   th:checked="${children.size()==1}">
+            <label th:for="${#ids.prev('selectedChildren')}" th:text="${child.getFullName()}"></label>
+        </div>
+    </div>
+    <button type="button" onclick="window.history.go(-1);">< Powrót</button>
+    <input type="submit" value="Potwierdzam">
+</form>
+</body>
+</html>

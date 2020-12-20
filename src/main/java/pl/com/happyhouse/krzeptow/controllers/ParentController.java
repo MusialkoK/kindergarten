@@ -42,16 +42,8 @@ public class ParentController {
     public String reports() {
 //        createDatabaseEntries();
 //        createMealPlanEntries();
-        addMealChange();
+//        addMealChange();
         return "parent/reports";
-    }
-
-    private void addMealChange() {
-        MealChange mealChange = MealChange.builder()
-                .newMealPlan(mealPlanService.getById(2L))
-                .child(childService.getById(1L))
-                .build();
-        mealChangeService.save(mealChange);
     }
 
 
@@ -116,8 +108,8 @@ public class ParentController {
         User user = User.builder()
                 .name("Adam")
                 .surname("Adamski")
-                .email("guardian1@wp.pl")
-                .password("guardian1")
+                .email("parent1@wp.pl")
+                .password("parent1")
                 .confirmPassword("guardian1")
                 .phone("+48154256987")
                 .role(roleService.getByName("ROLE_PARENT"))
@@ -135,6 +127,14 @@ public class ParentController {
                 .build();
         childService.save(child1);
         childService.save(child2);
+    }
+
+    private void addMealChange() {
+        MealChange mealChange = MealChange.builder()
+                .newMealPlan(mealPlanService.getById(2L))
+                .child(childService.getById(1L))
+                .build();
+        mealChangeService.save(mealChange);
     }
 }
 

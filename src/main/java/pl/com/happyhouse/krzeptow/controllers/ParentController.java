@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
 import pl.com.happyhouse.krzeptow.factory.MealChangeFactory;
-import pl.com.happyhouse.krzeptow.factory.MultiAbsenceFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
 
@@ -28,13 +27,13 @@ import java.util.stream.Collectors;
 public class ParentController {
 
     private final UserService userService;
-    private final MultiAbsenceFactory multiAbsenceFactory;
-    private final AbsenceService absenceService;
+    private final PresenceService presenceService;
     private final ChildService childService;
     private final RoleService roleService;
     private final MealPlanService mealPlanService;
     private final MealChangeService mealChangeService;
     private final MealChangeFactory mealChangeFactory;
+    private final DayCareStrategyService dayCareStrategyService;
 
     @GetMapping("")
     public String dashboard() {
@@ -46,6 +45,7 @@ public class ParentController {
 //        createDatabaseEntries();
 //        createMealPlanEntries();
 //        addMealChange();
+        createDayCareStrategyPlans();
         return "parent/reports";
     }
 
@@ -98,10 +98,27 @@ public class ParentController {
             model.addAttribute("children", user.getChildren());
             return "parent/absence";
         } else {
-            List<Absence> absences = multiAbsenceFactory.create(createdAbsenceDTO, userService.getByUsername(principal.getName()));
-            absences.forEach(absenceService::save);
+            presenceService.registerAbsence(createdAbsenceDTO.getChildren(), createdAbsenceDTO.getSingleDates(),
+                    userService.getByUsername(principal.getName()));
             return "parent/dashboard";
         }
+    }
+//---------------------------------------------------------------------
+
+    private void createDayCareStrategyPlans() {
+        dayCareStrategyService.save(DayCareStrategy.builder()
+                .name("Całodzienna")
+                .description("Codzienna opieka nad Twoim maluchem w godzinach 7.00-17.00")
+                .price(new BigDecimal(1000))
+                .type(DayCareStrategyType.MONTHLY)
+                .build());
+
+        dayCareStrategyService.save(DayCareStrategy.builder()
+                .name("Godzinowa")
+                .description("Chętnie zajmieny się Twoim maluchem w okeślonym czasie")
+                .price(new BigDecimal(20))
+                .type(DayCareStrategyType.HOURLY)
+                .build());
     }
 
     private void createMealPlanEntries() {

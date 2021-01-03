@@ -34,6 +34,9 @@ public class Child {
     @ManyToOne
     private MealPlan currentMealPlan;
 
+    @ManyToOne
+    private DayCareStrategy dayCareStrategy;
+
     public String getFullName(){
         return name + " " + surname;
     }

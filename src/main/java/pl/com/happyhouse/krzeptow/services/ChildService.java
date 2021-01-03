@@ -32,4 +32,6 @@ public class ChildService {
     public void changeMealPlan(MealChange mealChange){
         mealChange.getChild().setCurrentMealPlan(mealChange.getNewMealPlan());
     }
+
+
 }

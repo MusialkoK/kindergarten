@@ -21,7 +21,7 @@
 <body>
 <h1>Nieobecności</h1>
 <h2>Dotyczy:</h2>
-<form th:action="@{/parent/absence}" th:method="'post'" th:object="${absenceDTO}">
+<form th:action="@{/parent/presence}" th:method="'post'" th:object="${absenceDTO}">
     <div th:each="child: ${children}" class="group">
         <input type="checkbox" th:field="*{children}" th:value="${child.id}" name="cb" th:checked="${children.size()==1}">
         <label th:for="${#ids.prev('children')}" th:text="${child.getFullName()}"></label>

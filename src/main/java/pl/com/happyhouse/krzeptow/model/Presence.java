@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -17,7 +18,8 @@ import java.time.LocalDate;
 @Table(uniqueConstraints={
         @UniqueConstraint(columnNames = {"child_id", "date"})
 })
-public class Absence {
+@Accessors(chain = true)
+public class Presence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -33,4 +35,6 @@ public class Absence {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     private String description;
+
+    private int hours;
 }

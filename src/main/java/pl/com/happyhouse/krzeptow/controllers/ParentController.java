@@ -14,6 +14,7 @@ import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
 import pl.com.happyhouse.krzeptow.factory.MealChangeFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
+import pl.com.happyhouse.krzeptow.services.rest.HolidayService;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -34,6 +35,7 @@ public class ParentController {
     private final MealChangeService mealChangeService;
     private final MealChangeFactory mealChangeFactory;
     private final DayCareStrategyService dayCareStrategyService;
+    private final HolidayService holidayService;
 
     @GetMapping("")
     public String dashboard() {
@@ -45,7 +47,8 @@ public class ParentController {
 //        createDatabaseEntries();
 //        createMealPlanEntries();
 //        addMealChange();
-        createDayCareStrategyPlans();
+//        createDayCareStrategyPlans();
+        System.out.println(holidayService.getHolidaysInYear(2021));
         return "parent/reports";
     }
 

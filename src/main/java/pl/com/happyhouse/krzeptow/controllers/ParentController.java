@@ -91,6 +91,7 @@ public class ParentController {
     @PostMapping("/absence")
     public String registerAbsences(@Valid @ModelAttribute AbsenceDTO createdAbsenceDTO, BindingResult
             bindingResult, Principal principal, Model model) {
+        User parent = userService.getByUsername(principal.getName());
         if (bindingResult.hasErrors()) {
             User user = userService.getByUsername(principal.getName());
             List<String> errorMsg = bindingResult.getAllErrors().stream()
@@ -101,12 +102,12 @@ public class ParentController {
             model.addAttribute("children", user.getChildren());
             return "parent/absence";
         } else {
-            presenceService.registerAbsence(createdAbsenceDTO.getChildren(), createdAbsenceDTO.getSingleDates(),
-                    userService.getByUsername(principal.getName()));
+            presenceService.registerAbsence(createdAbsenceDTO, parent);
             return "parent/dashboard";
         }
     }
-//---------------------------------------------------------------------
+//-----------------------FOR DB ENTRY ONLY----------------------------------------------
+
 
     private void createDayCareStrategyPlans() {
         dayCareStrategyService.save(DayCareStrategy.builder()

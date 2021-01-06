@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
 import pl.com.happyhouse.krzeptow.factory.MealChangeFactory;
+import pl.com.happyhouse.krzeptow.factory.NextMonthPresenceFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
-import pl.com.happyhouse.krzeptow.services.rest.HolidayService;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,7 @@ public class ParentController {
     private final MealChangeFactory mealChangeFactory;
     private final DayCareStrategyService dayCareStrategyService;
     private final HolidayService holidayService;
+    private final NextMonthPresenceFactory nextMonthPresenceFactory;
 
     @GetMapping("")
     public String dashboard() {
@@ -48,7 +50,7 @@ public class ParentController {
 //        createMealPlanEntries();
 //        addMealChange();
 //        createDayCareStrategyPlans();
-        System.out.println(holidayService.getHolidaysInYear(2021));
+        System.out.println(holidayService.getHolidaysInYearMonth(YearMonth.of(2021,5)));
         return "parent/reports";
     }
 

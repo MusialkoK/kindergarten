@@ -19,7 +19,7 @@ import pl.com.happyhouse.krzeptow.services.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.time.YearMonth;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,9 +38,11 @@ public class ParentController {
     private final DayCareStrategyService dayCareStrategyService;
     private final HolidayService holidayService;
     private final NextMonthPresenceFactory nextMonthPresenceFactory;
+    private final WeeklyCarePlanService weeklyCarePlanService;
 
     @GetMapping("")
     public String dashboard() {
+
         return "parent/dashboard";
     }
 
@@ -50,7 +52,8 @@ public class ParentController {
 //        createMealPlanEntries();
 //        addMealChange();
 //        createDayCareStrategyPlans();
-        System.out.println(holidayService.getHolidaysInYearMonth(YearMonth.of(2021,5)));
+//        weeklyCarePlanWithChildAssignment();
+        createNextMontPresences();
         return "parent/reports";
     }
 
@@ -110,6 +113,21 @@ public class ParentController {
     }
 //-----------------------FOR DB ENTRY ONLY----------------------------------------------
 
+    private List<Presence> createNextMontPresences() {
+        return presenceService.createNextMonth();
+    }
+
+
+    private void weeklyCarePlanWithChildAssignment() {
+        Child child = childService.getById(1);
+        WeeklyCarePlan weeklyCarePlan = WeeklyCarePlan.builder()
+                .monday(LocalTime.of(7, 0), LocalTime.of(13, 0))
+                .tuesday(LocalTime.of(7, 0), LocalTime.of(13, 0))
+                .friday(LocalTime.of(12, 0), LocalTime.of(17, 0))
+                .child(child)
+                .build();
+        childService.setWeeklyCarePlan(child, weeklyCarePlan);
+    }
 
     private void createDayCareStrategyPlans() {
         dayCareStrategyService.save(DayCareStrategy.builder()

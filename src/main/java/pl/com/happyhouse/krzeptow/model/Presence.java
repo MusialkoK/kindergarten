@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(uniqueConstraints={
+@Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"child_id", "date"})
 })
 @Accessors(chain = true)
@@ -37,4 +37,9 @@ public class Presence {
     private String description;
 
     private int hours;
+
+    @Override
+    public String toString() {
+        return "Presence:" + child.getFullName() + " " + hours + 'h';
+    }
 }

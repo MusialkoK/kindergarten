@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.com.happyhouse.krzeptow.model.Child;
 import pl.com.happyhouse.krzeptow.model.DayCareStrategy;
+import pl.com.happyhouse.krzeptow.model.DayCareStrategyType;
 import pl.com.happyhouse.krzeptow.repository.DayCareStrategyRepository;
 
 import java.math.BigDecimal;
 import java.time.Month;
+import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -34,5 +36,9 @@ public class DayCareStrategyService {
             default:
                 return new BigDecimal(-1);
         }
+    }
+
+    public DayCareStrategy getByType(DayCareStrategyType type){
+        return dayCareStrategyRepository.getByType(type).orElseThrow(NoSuchElementException::new);
     }
 }

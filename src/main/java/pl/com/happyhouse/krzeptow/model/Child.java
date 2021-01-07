@@ -37,6 +37,9 @@ public class Child {
     @ManyToOne
     private DayCareStrategy dayCareStrategy;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private WeeklyCarePlan weeklyCarePlan;
+
     public String getFullName(){
         return name + " " + surname;
     }

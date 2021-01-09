@@ -22,15 +22,18 @@
 <h1>Nieobecności</h1>
 <h2>Dotyczy:</h2>
 <form th:action="@{/parent/presence}" th:method="'post'" th:object="${absenceDTO}">
-    <div th:each="child: ${children}" class="group">
-        <input type="checkbox" th:field="*{children}" th:value="${child.id}" name="cb" th:checked="${children.size()==1}">
+    <input type="text" th:value="${children.size()}" id="childrenCount">
+    <div th:each="child,iterStat : ${children}" class="group">
+        <input type="checkbox" th:field="*{children}" th:value="${child.id}" name="cb"
+               th:checked="${children.size()==1}">
         <label th:for="${#ids.prev('children')}" th:text="${child.getFullName()}"></label>
+        <div class="calendar" th:id="'mdp-demo'+${iterStat.index}"></div>
+        <input type="text" th:field="*{dates}" th:id="'DatesLabel'+${iterStat.index}"><br>
     </div>
     <h2>W jakie dni dziecko/dzieci NIE BĘDĄ w przedszkolu?</h2>
-    <div class="calendar" id="mdp-demo"></div>
     <h2>Jaka jest przyczyna nieobecności? (opcjonalnie)</h2>
     <input type="text" th:field="*{description}" id="description">
-    <input type="hidden" th:field="*{dates}" id=DatesLabel><br>
+
     <button type="button" onclick="window.history.go(-1);">< Powrót</button>
     <input type="submit" value="Potwierdzam">
 </form>

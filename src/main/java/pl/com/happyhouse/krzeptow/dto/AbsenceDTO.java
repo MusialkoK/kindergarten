@@ -19,12 +19,16 @@ public class AbsenceDTO {
     @Getter
     @Setter
     private List<Child> children;
+
     @NotEmpty
     @Setter
+    @Getter
     private String dates;
+
     @Getter
     @Setter
     private String description;
+
     @Getter
     private List<LocalDate> singleDates;
 

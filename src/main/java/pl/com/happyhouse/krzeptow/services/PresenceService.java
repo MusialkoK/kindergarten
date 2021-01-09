@@ -60,7 +60,7 @@ public class PresenceService {
     private List<Presence> getByAbsenceDTO(AbsenceDTO absenceDTO){
         List<Presence> absences = new ArrayList<>();
         for (Child child : absenceDTO.getChildren()) {
-            for (LocalDate date : absenceDTO.getSingleDates()) {
+            for (LocalDate date : absenceDTO.getLocalDates()) {
                 Presence absence = getByChildAndDate(child, date);
                 absences.add(absence);
             }
@@ -89,6 +89,10 @@ public class PresenceService {
                 .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
                 .filter(date -> !monthHolidays.contains(date))
                 .collect(Collectors.toList());
+    }
+
+    public List<Presence> getByChild(Child c) {
+        return presenceRepository.getByChild(c);
     }
 
 

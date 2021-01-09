@@ -6,8 +6,10 @@ $(document).ready(function () {
             beforeShowDay: $.datepicker.noWeekends,     // Disable selection of weekends
             firstDay: 1,                                // Start with Monday
             minDate: new Date(),                       // prevent selection of date older than today
+            addDisabledDates: document.getElementById('holidays').value.split(","),
             onSelect: function () {
-                $("#DatesLabel+i").val(JSON.stringify($(this).multiDatesPicker("getDates")))
+                console.log($(this).data("test"));
+                $('#DatesLabel'+$(this).data("test")).val(JSON.stringify($(this).multiDatesPicker("getDates")))
             }
         });
     }

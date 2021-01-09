@@ -20,7 +20,9 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -88,8 +90,15 @@ public class ParentController {
     @GetMapping("/absence")
     public String addAbsences(Model model, Principal principal) {
         User user = userService.getByUsername(principal.getName());
+        List<Child> children = user.getChildren();
+        Map<Child, List<Presence>> presences= new HashMap<>();
+        String[] test = {"1/29/2021","1/28/2021"};
+        children.forEach(c-> presences.put(c, presenceService.getByChild(c)));
         model.addAttribute("absenceDTO", AbsenceDTO.builder().build());
-        model.addAttribute("children", user.getChildren());
+        model.addAttribute("children", children);
+        model.addAttribute("holidays", "1/29/2021,1/28/2021");
+//        model.addAttribute("holidays", "1/29/2021");
+        model.addAttribute("presences", presences);
         return "parent/absence";
     }
 

@@ -7,6 +7,7 @@ import pl.com.happyhouse.krzeptow.model.Child;
 import pl.com.happyhouse.krzeptow.model.Presence;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,7 @@ public interface PresenceRepository extends JpaRepository<Presence, Long> {
 
     @Query(value = "SELECT max(date) FROM Presence ")
     Optional<Presence> getMaxDate();
+
+    List<Presence> getByChild(Child c);
 }
+

@@ -23,12 +23,14 @@
 <h2>Dotyczy:</h2>
 <form th:action="@{/parent/presence}" th:method="'post'" th:object="${absenceDTO}">
     <input type="text" th:value="${children.size()}" id="childrenCount">
+    <input type="text" th:value="${holidays}" id="holidays">
     <div th:each="child,iterStat : ${children}" class="group">
         <input type="checkbox" th:field="*{children}" th:value="${child.id}" name="cb"
                th:checked="${children.size()==1}">
         <label th:for="${#ids.prev('children')}" th:text="${child.getFullName()}"></label>
-        <div class="calendar" th:id="'mdp-demo'+${iterStat.index}"></div>
-        <input type="text" th:field="*{dates}" th:id="'DatesLabel'+${iterStat.index}"><br>
+        <div class="calendar" th:id="'mdp-demo'+${iterStat.index}" th:data-test="${iterStat.index}"></div>
+        <input type="text" th:field="*{localDates}" th:id="'DatesLabel'+${iterStat.index}"><br>
+        <input type="text" th:value="${presences.get(child)}" th:id="'Presences'+${iterStat.index}">
     </div>
     <h2>W jakie dni dziecko/dzieci NIE BĘDĄ w przedszkolu?</h2>
     <h2>Jaka jest przyczyna nieobecności? (opcjonalnie)</h2>

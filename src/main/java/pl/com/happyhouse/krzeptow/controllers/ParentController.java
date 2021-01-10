@@ -5,11 +5,9 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
+import pl.com.happyhouse.krzeptow.dto.ActivityForChildDto;
 import pl.com.happyhouse.krzeptow.factory.MultiAbsenceFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
@@ -18,6 +16,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -32,6 +31,7 @@ public class ParentController {
     private final RoleService roleService;
     private final MealPlanService mealPlanService;
     private final MealChangeService mealChangeService;
+    private final ActivityService activityService;
 
     @GetMapping("")
     public String dashboard() {
@@ -86,6 +86,7 @@ public class ParentController {
         }
     }
 
+
     private void createMealPlanEntries() {
         mealPlanService.save(MealPlan.builder()
                 .name("Standard")
@@ -136,5 +137,41 @@ public class ParentController {
         childService.save(child1);
         childService.save(child2);
     }
+
+
+    @GetMapping("/addActivity")
+    public String addActivity(@RequestParam(name = "childId", required = true) Long childId, Model model, Principal principal) {
+
+        Child child = childService.getById(childId);
+        Set<Activity> activityRegisteredForChildren = child.getActivities();
+
+        List<Activity> allActivity = activityService.getAll();
+
+        allActivity.removeAll(activityRegisteredForChildren);
+
+        model.addAttribute("activityForChildren", activityRegisteredForChildren);
+        model.addAttribute("activitiesNotAssignedToChild", allActivity);
+
+        return "parent/addActivity";
+    }
+
+    @PostMapping("/addActivity")
+    public String registeredActivity(@Valid @ModelAttribute ActivityForChildDto activityForChildDto, BindingResult bindingResult, Principal principal, Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Activity> activityList= activityService.getAll();
+            List<String> errorMsg = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            model.addAttribute("errorMsg", errorMsg);
+            model.addAttribute("absenceDTO", activityForChildDto);
+            model.addAttribute("activity", activityList);
+            return "parent/addActivity";
+        } else {
+            childService.addActivityToChildren(activityForChildDto);
+            return "parent/dashboard";
+        }
+    }
+
+
 }
 

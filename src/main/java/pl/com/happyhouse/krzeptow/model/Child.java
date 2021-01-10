@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "children")
 @AllArgsConstructor
@@ -34,7 +35,10 @@ public class Child {
     @ManyToOne
     private MealPlan currentMealPlan;
 
-    public String getFullName(){
+    @ManyToMany(mappedBy = "childs")
+    private Set<Activity> activities;
+
+    public String getFullName() {
         return name + " " + surname;
     }
 

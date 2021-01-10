@@ -8,4 +8,5 @@ import pl.com.happyhouse.krzeptow.model.Absence;
 @Repository
 public interface AbsenceRepository extends JpaRepository<Absence, Long> {
 
+
 }

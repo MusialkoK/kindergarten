@@ -42,4 +42,8 @@ public class HolidayService {
                 .date(LocalDate.parse(holidayRest.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
+
+    public List<LocalDate> findAllDates() {
+        return holidayRepository.findAll().stream().map(Holiday::getDate).collect(Collectors.toList());
+    }
 }

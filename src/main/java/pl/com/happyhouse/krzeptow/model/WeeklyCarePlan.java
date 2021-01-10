@@ -15,18 +15,18 @@ import java.time.LocalTime;
 @Data
 public class WeeklyCarePlan {
 
-    private WeeklyCarePlan(WeeklyCarePlanBuilder builder){
-        this.child=builder.child;
-        this.mondayStart=builder.mondayStart;
-        this.mondayEnd=builder.mondayEnd;
-        this.tuesdayStart=builder.tuesdayStart;
-        this.tuesdayEnd=builder.tuesdayEnd;
-        this.wednesdayStart=builder.wednesdayStart;
-        this.wednesdayEnd=builder.wednesdayEnd;
-        this.thursdayStart=builder.thursdayStart;
-        this.thursdayEnd=builder.thursdayEnd;
-        this.fridayStart=builder.fridayStart;
-        this.fridayEnd=builder.fridayEnd;
+    private WeeklyCarePlan(WeeklyCarePlanBuilder builder) {
+        this.child = builder.child;
+        this.mondayStart = builder.mondayStart;
+        this.mondayEnd = builder.mondayEnd;
+        this.tuesdayStart = builder.tuesdayStart;
+        this.tuesdayEnd = builder.tuesdayEnd;
+        this.wednesdayStart = builder.wednesdayStart;
+        this.wednesdayEnd = builder.wednesdayEnd;
+        this.thursdayStart = builder.thursdayStart;
+        this.thursdayEnd = builder.thursdayEnd;
+        this.fridayStart = builder.fridayStart;
+        this.fridayEnd = builder.fridayEnd;
     }
 
     @Id
@@ -57,13 +57,39 @@ public class WeeklyCarePlan {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime fridayEnd;
 
-    public static WeeklyCarePlanBuilder builder(){
+    public static WeeklyCarePlanBuilder builder() {
         return new WeeklyCarePlanBuilder();
+    }
+
+    public String getShortMonday() {
+        return getShort(mondayStart, mondayEnd);
+    }
+
+    public String getShortTuesday() {
+        return getShort(tuesdayStart, tuesdayEnd);
+    }
+
+    public String getShortWednesday() {
+        return getShort(wednesdayStart, wednesdayEnd);
+    }
+
+    public String getShortThursday() {
+        return getShort(thursdayStart, thursdayEnd);
+    }
+
+    public String getShortFriday() {
+        return getShort(fridayStart, fridayEnd);
+    }
+
+    private String getShort(LocalTime start, LocalTime end) {
+        if (start != null && end != null) {
+            return start.getHour() + " - " + end.getHour();
+        } else return "-";
     }
 
     @NoArgsConstructor
     @Accessors(chain = true)
-    public static class  WeeklyCarePlanBuilder {
+    public static class WeeklyCarePlanBuilder {
         private Child child;
         private LocalTime mondayStart;
         private LocalTime mondayEnd;
@@ -76,42 +102,42 @@ public class WeeklyCarePlan {
         private LocalTime fridayStart;
         private LocalTime fridayEnd;
 
-        public WeeklyCarePlanBuilder monday(LocalTime start, LocalTime end){
+        public WeeklyCarePlanBuilder monday(LocalTime start, LocalTime end) {
             this.mondayStart = start;
-            this.mondayEnd=end;
+            this.mondayEnd = end;
             return this;
         }
 
-        public WeeklyCarePlanBuilder tuesday(LocalTime start, LocalTime end){
+        public WeeklyCarePlanBuilder tuesday(LocalTime start, LocalTime end) {
             this.tuesdayStart = start;
-            this.tuesdayEnd=end;
+            this.tuesdayEnd = end;
             return this;
         }
 
-        public WeeklyCarePlanBuilder wednesday(LocalTime start, LocalTime end){
+        public WeeklyCarePlanBuilder wednesday(LocalTime start, LocalTime end) {
             this.wednesdayStart = start;
-            this.wednesdayEnd=end;
+            this.wednesdayEnd = end;
             return this;
         }
 
-        public WeeklyCarePlanBuilder thursday(LocalTime start, LocalTime end){
+        public WeeklyCarePlanBuilder thursday(LocalTime start, LocalTime end) {
             this.thursdayStart = start;
-            this.thursdayEnd=end;
+            this.thursdayEnd = end;
             return this;
         }
 
-        public WeeklyCarePlanBuilder friday(LocalTime start, LocalTime end){
+        public WeeklyCarePlanBuilder friday(LocalTime start, LocalTime end) {
             this.fridayStart = start;
-            this.fridayEnd=end;
+            this.fridayEnd = end;
             return this;
         }
 
-        public WeeklyCarePlanBuilder child(Child child){
-            this.child=child;
+        public WeeklyCarePlanBuilder child(Child child) {
+            this.child = child;
             return this;
         }
 
-        public WeeklyCarePlan build(){
+        public WeeklyCarePlan build() {
             WeeklyCarePlan weeklyCarePlan = new WeeklyCarePlan(this);
             return weeklyCarePlan;
         }

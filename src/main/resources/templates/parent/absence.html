@@ -17,20 +17,38 @@
             crossorigin="anonymous"></script>
     <script th:src="@{/js/Multiple-Dates-Picker/jquery-ui.multidatespicker.js}"></script>
     <script th:src="@{/js/dates.js}"></script>
+    <script th:src="@{/js/datepicker-pl.js}"></script>
 </head>
 <body>
 <h1>Nieobecności</h1>
-<h2>Dotyczy:</h2>
 <form th:action="@{/parent/presence}" th:method="'post'" th:object="${absenceDTO}">
-    <input type="text" th:value="${children.size()}" id="childrenCount">
-    <input type="text" th:value="${holidays}" id="holidays">
+    <input type="hidden" th:value="${children.size()}" id="childrenCount">
+    <input type="hidden" th:value="${holidays}" id="holidays">
     <div th:each="child,iterStat : ${children}" class="group">
-        <input type="checkbox" th:field="*{children}" th:value="${child.id}" name="cb"
-               th:checked="${children.size()==1}">
-        <label th:for="${#ids.prev('children')}" th:text="${child.getFullName()}"></label>
+        <h2><span th:text="${child.getFullName()}"></span></h2>
+        <div th:if="${child.dayCareStrategy.type == T(pl.com.happyhouse.krzeptow.model.DayCareStrategyType).HOURLY}" id="weekPlanChange">
+            <table class="weekTable">
+                <tbody>
+                <tr>
+                    <td>Pn</td><td>Wt</td><td>Śr</td><td>Czw</td><td>Pt</td><td rowspan="0"><button type="button" id="changePlan">Zmień ></button></td></tr>
+                <tr>
+                    <td><span th:text="${child.weeklyCarePlan.getShortMonday()}"></span></td>
+                    <td><span th:text="${child.weeklyCarePlan.getShortTuesday()}"></span></td>
+                    <td><span th:text="${child.weeklyCarePlan.getShortWednesday()}"></span></td>
+                    <td><span th:text="${child.weeklyCarePlan.getShortThursday()}"></span></td>
+                    <td><span th:text="${child.weeklyCarePlan.getShortFriday()}"></span></td>
+                </tr>
+                </tbody>
+                </tr>
+            </table><br>
+
+        </div>
+        <div th:if="${child.dayCareStrategy.type == T(pl.com.happyhouse.krzeptow.model.DayCareStrategyType).MONTHLY}">
+            <h3>Opieka całodniowa</h3>
+        </div>
         <div class="calendar" th:id="'mdp-demo'+${iterStat.index}" th:data-test="${iterStat.index}"></div>
-        <input type="text" th:field="*{localDates}" th:id="'DatesLabel'+${iterStat.index}"><br>
-        <input type="text" th:value="${presences.get(child)}" th:id="'Presences'+${iterStat.index}">
+        <input type="hidden" th:field="*{localDates}" th:id="'datesLabel'+${iterStat.index}"><br>
+        <input type="hidden" th:value="${presences.get(child)}" th:id="'presences'+${iterStat.index}">
     </div>
     <h2>W jakie dni dziecko/dzieci NIE BĘDĄ w przedszkolu?</h2>
     <h2>Jaka jest przyczyna nieobecności? (opcjonalnie)</h2>

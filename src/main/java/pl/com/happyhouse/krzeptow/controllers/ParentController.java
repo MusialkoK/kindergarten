@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.com.happyhouse.krzeptow.Helper;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
 import pl.com.happyhouse.krzeptow.factory.MealChangeFactory;
@@ -20,7 +21,9 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -88,8 +91,13 @@ public class ParentController {
     @GetMapping("/absence")
     public String addAbsences(Model model, Principal principal) {
         User user = userService.getByUsername(principal.getName());
+        List<Child> children = user.getChildren();
+        Map<Child, String> presences = new HashMap<>();
+        children.forEach(c -> presences.put(c, Helper.createStringFromLocalDateList(presenceService.getPresenceDatesBy(c))));
         model.addAttribute("absenceDTO", AbsenceDTO.builder().build());
-        model.addAttribute("children", user.getChildren());
+        model.addAttribute("children", children);
+        model.addAttribute("holidays", Helper.createStringFromLocalDateList(holidayService.findAllDates()));
+        model.addAttribute("presences", presences);
         return "parent/absence";
     }
 

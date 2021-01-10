@@ -1,10 +1,12 @@
 package pl.com.happyhouse.krzeptow.dto;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.com.happyhouse.krzeptow.model.Child;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -14,34 +16,31 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Data
 public class AbsenceDTO {
-    @NotEmpty
-    @Getter
-    @Setter
+
     private List<Child> children;
 
-    @NotEmpty
-    @Setter
-    @Getter
     private String dates;
 
-    @Getter
-    @Setter
     private String description;
 
-    @Getter
-    private List<LocalDate> singleDates;
+    private List<LocalDate> localDates;
 
     public void parse(){
-        singleDates = getDates(dates);
+        localDates = getLocalDates(dates);
     }
 
-    private List<LocalDate> getDates(String stringOfDates) {
+    private List<LocalDate> getLocalDates(String stringOfDates) {
         stringOfDates = stringOfDates.replaceAll("[\"\\[\\]]", "");
         List<String> datesInString = Arrays.asList(stringOfDates.split(","));
         return datesInString.stream()
                 .map(s -> LocalDate.parse(s, DateTimeFormatter.ofPattern("MM/dd/yyyy")))
                 .collect(Collectors.toList());
+    }
+
+    private String getStringDates(List<LocalDate> dates){
+        return "";
     }
 
 }

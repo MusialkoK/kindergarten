@@ -31,13 +31,14 @@ public class PresenceService {
     public Presence save(Presence presence) {
         return presenceRepository.save(presence);
     }
+
     public List<Presence> saveAll(List<Presence> presences) {
         return presenceRepository.saveAll(presences);
     }
 
     public List<Presence> registerAbsence(AbsenceDTO absenceDTO, User parent) {
         List<Presence> absences = getByAbsenceDTO(absenceDTO);
-        absences.forEach(a->{
+        absences.forEach(a -> {
             a.setHours(-1);
             a.setReporter(parent);
         });
@@ -48,19 +49,19 @@ public class PresenceService {
         return presenceRepository.getByChildAndDate(child, date).orElseThrow(NoSuchElementException::new);
     }
 
-    public LocalDate getByMaxDate(){
-        try{
+    public LocalDate getByMaxDate() {
+        try {
             Presence presence = presenceRepository.getMaxDate().orElseThrow();
             return presence.getDate();
-        }catch (Exception e){
+        } catch (Exception e) {
             return LocalDate.now().minusMonths(1);
         }
     }
 
-    private List<Presence> getByAbsenceDTO(AbsenceDTO absenceDTO){
+    private List<Presence> getByAbsenceDTO(AbsenceDTO absenceDTO) {
         List<Presence> absences = new ArrayList<>();
         for (Child child : absenceDTO.getChildren()) {
-            for (LocalDate date : absenceDTO.getSingleDates()) {
+            for (LocalDate date : absenceDTO.getLocalDates()) {
                 Presence absence = getByChildAndDate(child, date);
                 absences.add(absence);
             }
@@ -88,6 +89,16 @@ public class PresenceService {
                 .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SATURDAY))
                 .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
                 .filter(date -> !monthHolidays.contains(date))
+                .collect(Collectors.toList());
+    }
+
+    public List<Presence> getPresencesByChild(Child c) {
+        return presenceRepository.getByChild(c);
+    }
+
+    public List<LocalDate> getPresenceDatesBy(Child child) {
+        return getPresencesByChild(child).stream()
+                .map(Presence::getDate)
                 .collect(Collectors.toList());
     }
 

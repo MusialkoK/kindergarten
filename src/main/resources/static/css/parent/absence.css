@@ -51,7 +51,6 @@ input[type="submit"]:active, input[type="submit"]:focus, button:active, button:f
     width: 400px;
     height: 200px;
     margin-left: 50px;
-
 }
 
 form {
@@ -59,4 +58,35 @@ form {
 }
 h1{
     margin-left: 90px;
+}
+
+table.weekTable {
+    background-color: #ffdca2;
+    width: 550px;
+    text-align: center;
+    border-collapse: collapse;
+    font-family: "Segoe UI Light";
+    font-weight: bold;
+    /*border: 1px solid #AAAAAA;*/
+}
+table.weekTable td, table.weekTable th {
+    padding: 3px 2px;
+}
+table.weekTable tbody td {
+    /*border: 1px solid #AAAAAA;*/
+    font-size: 14px;
+
+}
+table.weekTable tfoot td {
+    font-size: 13px;
+}
+table.weekTable tfoot .links {
+    text-align: right;
+}
+
+#changePlan{
+    margin: 2px;
+    height: 40px;
+    width: 120px;
+    padding: 3px;
 }

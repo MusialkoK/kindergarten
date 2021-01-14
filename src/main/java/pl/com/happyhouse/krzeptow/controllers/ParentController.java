@@ -43,6 +43,8 @@ public class ParentController {
     private final NextMonthPresenceFactory nextMonthPresenceFactory;
     private final WeeklyCarePlanService weeklyCarePlanService;
 
+    private List<Child> children;
+
     @GetMapping("")
     public String dashboard() {
 
@@ -56,7 +58,7 @@ public class ParentController {
 //        addMealChange();
 //        createDayCareStrategyPlans();
 //        weeklyCarePlanWithChildAssignment();
-        createNextMontPresences();
+//        createNextMontPresences();
         return "parent/reports";
     }
 
@@ -92,11 +94,12 @@ public class ParentController {
     public String addAbsences(Model model, Principal principal) {
         User user = userService.getByUsername(principal.getName());
         List<Child> children = user.getChildren();
+        this.children = children;
         Map<Child, String> presences = new HashMap<>();
-        children.forEach(c -> presences.put(c, Helper.createStringFromLocalDateList(presenceService.getPresenceDatesBy(c))));
+        children.forEach(c -> presences.put(c, Helper.localDatesToString(presenceService.getRealPresenceDatesBy(c))));
         model.addAttribute("absenceDTO", AbsenceDTO.builder().build());
         model.addAttribute("children", children);
-        model.addAttribute("holidays", Helper.createStringFromLocalDateList(holidayService.findAllDates()));
+        model.addAttribute("holidays", Helper.localDatesToString(holidayService.findAllDates()));
         model.addAttribute("presences", presences);
         return "parent/absence";
     }
@@ -115,6 +118,7 @@ public class ParentController {
             model.addAttribute("children", user.getChildren());
             return "parent/absence";
         } else {
+            createdAbsenceDTO.setChildren(this.children);
             presenceService.registerAbsence(createdAbsenceDTO, parent);
             return "parent/dashboard";
         }

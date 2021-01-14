@@ -21,7 +21,7 @@
 </head>
 <body>
 <h1>Nieobecności</h1>
-<form th:action="@{/parent/presence}" th:method="'post'" th:object="${absenceDTO}">
+<form th:action="@{/parent/absence}" th:method="'post'" th:object="${absenceDTO}">
     <input type="hidden" th:value="${children.size()}" id="childrenCount">
     <input type="hidden" th:value="${holidays}" id="holidays">
     <div th:each="child,iterStat : ${children}" class="group">
@@ -30,7 +30,7 @@
             <table class="weekTable">
                 <tbody>
                 <tr>
-                    <td>Pn</td><td>Wt</td><td>Śr</td><td>Czw</td><td>Pt</td><td rowspan="0"><button type="button" id="changePlan">Zmień ></button></td></tr>
+                    <td>Pn</td><td>Wt</td><td>Śr</td><td>Czw</td><td>Pt</td><td rowspan="0"><button type="button" id="changePlan" hidden>Zmień ></button></td></tr>
                 <tr>
                     <td><span th:text="${child.weeklyCarePlan.getShortMonday()}"></span></td>
                     <td><span th:text="${child.weeklyCarePlan.getShortTuesday()}"></span></td>
@@ -41,13 +41,12 @@
                 </tbody>
                 </tr>
             </table><br>
-
         </div>
         <div th:if="${child.dayCareStrategy.type == T(pl.com.happyhouse.krzeptow.model.DayCareStrategyType).MONTHLY}">
             <h3>Opieka całodniowa</h3>
         </div>
         <div class="calendar" th:id="'mdp-demo'+${iterStat.index}" th:data-test="${iterStat.index}"></div>
-        <input type="hidden" th:field="*{localDates}" th:id="'datesLabel'+${iterStat.index}"><br>
+        <input type="hidden" th:field="*{dates}" th:id="'datesLabel'+${iterStat.index}"><br>
         <input type="hidden" th:value="${presences.get(child)}" th:id="'presences'+${iterStat.index}">
     </div>
     <h2>W jakie dni dziecko/dzieci NIE BĘDĄ w przedszkolu?</h2>

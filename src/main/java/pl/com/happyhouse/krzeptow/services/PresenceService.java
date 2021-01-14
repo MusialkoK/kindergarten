@@ -35,30 +35,6 @@ public class PresenceService {
         return presenceRepository.saveAll(presences);
     }
 
-    public List<Presence> registerAbsence(AbsenceDTO absenceDTO, User parent) {
-        List<Presence> absences = new ArrayList<>();
-        List<String> datesList = splitIntoList(absenceDTO.getDates(), absenceDTO.getChildren().size());
-        if (datesList.isEmpty()) return Collections.emptyList();
-        for (int i = 0; i < absenceDTO.getChildren().size(); i++) {
-            if (datesList.get(i).isEmpty()) continue;
-            Child child = absenceDTO.getChildren().get(i);
-            List<LocalDate> datesFromForm = Helper.stringToLocalDates(datesList.get(i));
-            List<LocalDate> datesInPresenceEntity = getPresenceAllDatesBy(child);
-            absences = datesInPresenceEntity.stream()
-                    .filter(d -> !datesFromForm.contains(d))
-                    .map(d -> getByChildAndDate(child, d))
-                    .collect(Collectors.toList());
-        }
-        absences.forEach(a -> a.setHours(-1).setReporter(parent).setDescription(absenceDTO.getDescription()));
-        return saveAll(absences);
-    }
-
-    private List<String> splitIntoList(String dates, int childrenCount) {
-        dates = dates.replaceAll("\",\"", "\";\"");
-        List<String> result = Arrays.asList(dates.split(",", 2).clone());
-        return result;
-    }
-
     public Presence getByChildAndDate(Child child, LocalDate date) {
         return presenceRepository.getByChildAndDate(child, date).orElseThrow(NoSuchElementException::new);
     }
@@ -79,22 +55,6 @@ public class PresenceService {
         return presenceRepository.saveAll(result);
     }
 
-    private YearMonth getLastMonthInDB() {
-        LocalDate date = getByMaxDate();
-        return YearMonth.of(date.getYear(), date.getMonth());
-    }
-
-    private List<LocalDate> getDatesEntries() {
-        YearMonth yearMonth = getLastMonthInDB().plusMonths(1);
-        List<LocalDate> monthHolidays = holidayService.getHolidaysInYearMonth(yearMonth);
-        Stream<LocalDate> dateEntries = Helper.createStreamFromYearMonth(yearMonth);
-        return dateEntries
-                .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SATURDAY))
-                .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
-                .filter(date -> !monthHolidays.contains(date))
-                .collect(Collectors.toList());
-    }
-
     public List<Presence> getPresencesByChild(Child c) {
         return presenceRepository.getByChild(c);
     }
@@ -112,13 +72,87 @@ public class PresenceService {
                 .collect(Collectors.toList());
     }
 
+    public List<Presence> registerAbsence(AbsenceDTO absenceDTO, User parent) {
+        List<Presence> absences = new ArrayList<>();
+        List<String> datesList = splitIntoList(absenceDTO.getDates(), absenceDTO.getChildren().size());
+        if (datesList.isEmpty()) return Collections.emptyList();
+        for (int i = 0; i < absenceDTO.getChildren().size(); i++) {
+            absences.addAll(getPresences(absenceDTO.getChildren().get(i),
+                    datesList.get(i), parent, absenceDTO.getDescription()));
+        }
+        return saveAll(absences);
+    }
 
-//    public Presence registerAbsence(Child child, LocalDate date, User parent) {
-//        Presence presence = getByChildAndDate(child, date);
-//        presence.setHours(-1);
-//        presence.setReporter(parent);
-//        return presenceRepository.save(presence);
-//    }
+    private List<Presence> getPresences(Child child, String dates, User parent, String description) {
+        List<Presence> result = new ArrayList<>();
+        if (dates.isEmpty()) return Collections.emptyList();
+        List<LocalDate> datesFromForm = Helper.stringToLocalDates(dates);
+        List<LocalDate> datesInPresenceEntity = getRealPresenceDatesBy(child);
+        DatesSplitter.createDates(datesFromForm, datesInPresenceEntity);
 
+        result.addAll(createAbsences(child));
+        result.addAll(createPresences(child));
+        result.forEach(a -> a.setReporter(parent).setDescription(description));
+        return result;
+    }
 
+    private List<Presence> createAbsences(Child child){
+        return DatesSplitter.datesToMakeAbsent.stream()
+                .map(d -> getByChildAndDate(child, d))
+                .map(this::makeAbsent)
+                .collect(Collectors.toList());
+    }
+
+    private List<Presence> createPresences(Child child){
+        return DatesSplitter.datesToMakePresent.stream()
+                .map(d -> getByChildAndDate(child, d))
+                .map(this::makePresent)
+                .collect(Collectors.toList());
+    }
+
+    private Presence makeAbsent(Presence presence) {
+        return presence.setHours(-1);
+    }
+
+    private Presence makePresent(Presence presence) {
+        LocalDate date = presence.getDate();
+        return presence.setHours(childService.getHoursFor(presence.getChild(), date.getDayOfWeek()));
+    }
+
+    private List<String> splitIntoList(String dates, int childrenCount) {
+        dates = dates.replaceAll("\",\"", "\";\"");
+        List<String> result = Arrays.asList(dates.split(",", childrenCount).clone());
+        return result;
+    }
+
+    private YearMonth getLastMonthInDB() {
+        LocalDate date = getByMaxDate();
+        return YearMonth.of(date.getYear(), date.getMonth());
+    }
+
+    private List<LocalDate> getDatesEntries() {
+        YearMonth yearMonth = getLastMonthInDB().plusMonths(1);
+        List<LocalDate> monthHolidays = holidayService.getHolidaysInYearMonth(yearMonth);
+        Stream<LocalDate> dateEntries = Helper.createStreamFromYearMonth(yearMonth);
+        return dateEntries
+                .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SATURDAY))
+                .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+                .filter(date -> !monthHolidays.contains(date))
+                .collect(Collectors.toList());
+    }
+
+    static class DatesSplitter {
+        private static List<LocalDate> datesToMakePresent;
+        private static List<LocalDate> datesToMakeAbsent;
+
+        public static void createDates(List<LocalDate> form, List<LocalDate> database){
+            datesToMakeAbsent = database;
+            datesToMakePresent = form;
+            List<LocalDate> common = new ArrayList<>(form);
+            common.retainAll(database);
+            datesToMakeAbsent.removeAll(common);
+            datesToMakePresent.removeAll(common);
+            System.out.println("aaa");
+        }
+    }
 }

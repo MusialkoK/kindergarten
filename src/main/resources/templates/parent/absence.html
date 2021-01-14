@@ -20,7 +20,7 @@
     <script th:src="@{/js/datepicker-pl.js}"></script>
 </head>
 <body>
-<h1>Nieobecności</h1>
+<h1>Aktualny grafik obecności dzieci. Kliknij w dni kalendarza lub przycisk "Zmień".</h1>
 <form th:action="@{/parent/absence}" th:method="'post'" th:object="${absenceDTO}">
     <input type="hidden" th:value="${children.size()}" id="childrenCount">
     <input type="hidden" th:value="${holidays}" id="holidays">
@@ -49,10 +49,8 @@
         <input type="hidden" th:field="*{dates}" th:id="'datesLabel'+${iterStat.index}"><br>
         <input type="hidden" th:value="${presences.get(child)}" th:id="'presences'+${iterStat.index}">
     </div>
-    <h2>W jakie dni dziecko/dzieci NIE BĘDĄ w przedszkolu?</h2>
     <h2>Jaka jest przyczyna nieobecności? (opcjonalnie)</h2>
     <input type="text" th:field="*{description}" id="description">
-
     <button type="button" onclick="window.history.go(-1);">< Powrót</button>
     <input type="submit" value="Potwierdzam">
 </form>

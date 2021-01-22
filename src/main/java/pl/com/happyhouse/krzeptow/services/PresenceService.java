@@ -9,6 +9,7 @@ import pl.com.happyhouse.krzeptow.model.Presence;
 import pl.com.happyhouse.krzeptow.model.User;
 import pl.com.happyhouse.krzeptow.model.WeeklyCarePlan;
 import pl.com.happyhouse.krzeptow.repository.PresenceRepository;
+import pl.com.happyhouse.krzeptow.utils.DatesSplitter;
 import pl.com.happyhouse.krzeptow.utils.LocalDateConverter;
 
 import java.time.DayOfWeek;
@@ -101,14 +102,14 @@ public class PresenceService {
     }
 
     private List<Presence> createAbsences(Child child) {
-        return DatesSplitter.datesToMakeAbsent.stream()
+        return DatesSplitter.getDatesToMakeAbsent().stream()
                 .map(d -> getByChildAndDate(child, d))
                 .map(this::makeAbsent)
                 .collect(Collectors.toList());
     }
 
     private List<Presence> createPresences(Child child) {
-        return DatesSplitter.datesToMakePresent.stream()
+        return DatesSplitter.getDatesToMakePresent().stream()
                 .map(d -> getByChildAndDate(child, d))
                 .map(this::makePresent)
                 .collect(Collectors.toList());
@@ -159,21 +160,6 @@ public class PresenceService {
             List<Presence> presenceList = presenceRepository.getByChildAndDateAfter(plan.getChild(), LocalDate.now());
             presenceList
                     .forEach(p -> p.setHours(weeklyCarePlanService.getHoursFor(plan, p.getDate().getDayOfWeek())));
-        }
-    }
-
-    static class DatesSplitter {
-        private static List<LocalDate> datesToMakePresent;
-        private static List<LocalDate> datesToMakeAbsent;
-
-        public static void createDates(List<LocalDate> form, List<LocalDate> database) {
-            datesToMakeAbsent = database;
-            datesToMakePresent = form;
-            List<LocalDate> common = new ArrayList<>(form);
-            common.retainAll(database);
-            datesToMakeAbsent.removeAll(common);
-            datesToMakePresent.removeAll(common);
-            System.out.println("aaa");
         }
     }
 }

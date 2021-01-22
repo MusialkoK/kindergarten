@@ -18,6 +18,7 @@
     <script th:src="@{/js/Multiple-Dates-Picker/jquery-ui.multidatespicker.js}"></script>
     <script th:src="@{/js/dates.js}"></script>
     <script th:src="@{/js/datepicker-pl.js}"></script>
+    <script th:src="@{/js/weekChange.js}"></script>
 </head>
 <body>
 <h1>Aktualny grafik obecności dzieci. Kliknij w dni kalendarza lub przycisk "Zmień".</h1>
@@ -26,21 +27,34 @@
     <input type="hidden" th:value="${holidays}" id="holidays">
     <div th:each="child,iterStat : ${children}" class="group">
         <h2><span th:text="${child.getFullName()}"></span></h2>
-        <div th:if="${child.dayCareStrategy.type == T(pl.com.happyhouse.krzeptow.model.DayCareStrategyType).HOURLY}" id="weekPlanChange">
+        <input type="hidden" th:value="${child.id}" name="childrenIds" id="childrenIds">
+        <div th:if="${child.dayCareStrategy.type == T(pl.com.happyhouse.krzeptow.model.DayCareStrategyType).HOURLY}"
+             id="weekPlanChange">
+            <h3>Opieka godzinowa</h3>
+            <h3>Aktualny, tygodniowy plan opieki godzinowej</h3>
             <table class="weekTable">
                 <tbody>
                 <tr>
-                    <td>Pn</td><td>Wt</td><td>Śr</td><td>Czw</td><td>Pt</td><td rowspan="0"><button type="button" id="changePlan" hidden>Zmień ></button></td></tr>
+                    <td>Pn</td>
+                    <td>Wt</td>
+                    <td>Śr</td>
+                    <td>Czw</td>
+                    <td>Pt</td>
+                </tr>
                 <tr>
-                    <td><span th:text="${child.weeklyCarePlan.getShortMonday()}"></span></td>
-                    <td><span th:text="${child.weeklyCarePlan.getShortTuesday()}"></span></td>
-                    <td><span th:text="${child.weeklyCarePlan.getShortWednesday()}"></span></td>
-                    <td><span th:text="${child.weeklyCarePlan.getShortThursday()}"></span></td>
-                    <td><span th:text="${child.weeklyCarePlan.getShortFriday()}"></span></td>
+                    <td th:each="day : ${days}">
+                        <input type="text" class="hour" th:value="${child.weeklyCarePlan.getStart(day).getHour()}"
+                               id="startHours" name="startHours">
+                        <span> - </span>
+                        <input type="text" class="hour" th:value="${child.weeklyCarePlan.getEnd(day).getHour()}"
+                               id="endHours" name="endHours">
+                    </td>
                 </tr>
                 </tbody>
                 </tr>
-            </table><br>
+            </table>
+            <br>
+            <br>
         </div>
         <div th:if="${child.dayCareStrategy.type == T(pl.com.happyhouse.krzeptow.model.DayCareStrategyType).MONTHLY}">
             <h3>Opieka całodniowa</h3>

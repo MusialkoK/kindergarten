@@ -62,7 +62,7 @@ h1{
 
 table.weekTable {
     background-color: #ffdca2;
-    width: 550px;
+    width: 400px;
     text-align: center;
     border-collapse: collapse;
     font-family: "Segoe UI Light";
@@ -84,9 +84,30 @@ table.weekTable tfoot .links {
     text-align: right;
 }
 
-#changePlan{
+#changeButton, #saveButton{
     margin: 2px;
     height: 40px;
     width: 120px;
     padding: 3px;
+}
+
+#saveButton{
+    display: none;
+}
+
+.dayText{
+    display: block;
+}
+
+.dayEdit{
+    display: none;
+    width: 90px;
+}
+
+.hour{
+    width: 15px;
+    border: none;
+    font-family: "Segoe UI Light";
+    font-weight: bold;
+    text-align: center;
 }

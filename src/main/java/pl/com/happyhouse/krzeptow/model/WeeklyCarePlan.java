@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Accessors(chain = true)
 public class WeeklyCarePlan {
 
     private WeeklyCarePlan(WeeklyCarePlanBuilder builder) {
@@ -61,6 +62,81 @@ public class WeeklyCarePlan {
         return new WeeklyCarePlanBuilder();
     }
 
+    public boolean isDayEmpty(int day) {
+        return (getStart(day).equals(LocalTime.of(0,0)) ||
+                getEnd(day).equals(LocalTime.of(0,0)));
+    }
+
+    public LocalTime getEnd(int day) {
+        LocalTime result;
+        switch (day) {
+            case 1:
+                result = getMondayEnd();
+                break;
+            case 2:
+                result = getTuesdayEnd();
+            break;
+            case 3:
+                result = getWednesdayEnd();
+            break;
+            case 4:
+                result = getThursdayEnd();
+            break;
+            default:
+                result = getFridayEnd();
+            break;
+        }
+        
+        if(result==null){
+            return LocalTime.of(0,0);
+        }else{
+            return result;
+        }
+    }
+
+
+    public LocalTime getStart(int day) {
+        LocalTime result;
+        switch (day) {
+            case 1:
+                result = getMondayStart();
+                break;
+            case 2:
+                result = getTuesdayStart();
+                break;
+            case 3:
+                result = getWednesdayStart();
+                break;
+            case 4:
+                result = getThursdayStart();
+                break;
+            default:
+                result = getFridayStart();
+                break;
+        }
+
+        if(result==null){
+            return LocalTime.of(0,0);
+        }else{
+            return result;
+        }
+    }
+
+    public String getShort(int day) {
+        switch (day) {
+            case 1:
+                return getShortMonday();
+            case 2:
+                return getShortTuesday();
+            case 3:
+                return getShortWednesday();
+            case 4:
+                return getShortThursday();
+            default:
+                return getShortFriday();
+        }
+    }
+
     public String getShortMonday() {
         return getShort(mondayStart, mondayEnd);
     }
@@ -90,6 +166,7 @@ public class WeeklyCarePlan {
     @NoArgsConstructor
     @Accessors(chain = true)
     public static class WeeklyCarePlanBuilder {
+        private long id;
         private Child child;
         private LocalTime mondayStart;
         private LocalTime mondayEnd;
@@ -134,6 +211,11 @@ public class WeeklyCarePlan {
 
         public WeeklyCarePlanBuilder child(Child child) {
             this.child = child;
+            return this;
+        }
+
+        public WeeklyCarePlanBuilder id(long id){
+            this.id=id;
             return this;
         }
 

@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.com.happyhouse.krzeptow.Helper;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.dto.MealChangeDTO;
 import pl.com.happyhouse.krzeptow.factory.MealChangeFactory;
 import pl.com.happyhouse.krzeptow.factory.NextMonthPresenceFactory;
 import pl.com.happyhouse.krzeptow.model.*;
 import pl.com.happyhouse.krzeptow.services.*;
+import pl.com.happyhouse.krzeptow.utils.LocalDateConverter;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +43,6 @@ public class ParentController {
     private final HolidayService holidayService;
     private final NextMonthPresenceFactory nextMonthPresenceFactory;
     private final WeeklyCarePlanService weeklyCarePlanService;
-
-    private List<Child> children;
 
     @GetMapping("")
     public String dashboard() {
@@ -94,13 +93,13 @@ public class ParentController {
     public String addAbsences(Model model, Principal principal) {
         User user = userService.getByUsername(principal.getName());
         List<Child> children = user.getChildren();
-        this.children = children;
         Map<Child, String> presences = new HashMap<>();
-        children.forEach(c -> presences.put(c, Helper.localDatesToString(presenceService.getRealPresenceDatesBy(c))));
+        children.forEach(c -> presences.put(c, LocalDateConverter.localDatesToString(presenceService.getRealPresenceDatesBy(c))));
         model.addAttribute("absenceDTO", AbsenceDTO.builder().build());
         model.addAttribute("children", children);
-        model.addAttribute("holidays", Helper.localDatesToString(holidayService.findAllDates()));
+        model.addAttribute("holidays", LocalDateConverter.localDatesToString(holidayService.findAllDates()));
         model.addAttribute("presences", presences);
+        model.addAttribute("days", Arrays.asList(1,2,3,4,5));
         return "parent/absence";
     }
 
@@ -118,11 +117,12 @@ public class ParentController {
             model.addAttribute("children", user.getChildren());
             return "parent/absence";
         } else {
-            createdAbsenceDTO.setChildren(this.children);
             presenceService.registerAbsence(createdAbsenceDTO, parent);
             return "parent/dashboard";
         }
     }
+
+
 //-----------------------FOR DB ENTRY ONLY----------------------------------------------
 
     private List<Presence> createNextMontPresences() {

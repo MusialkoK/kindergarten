@@ -1,4 +1,4 @@
-package pl.com.happyhouse.krzeptow;
+package pl.com.happyhouse.krzeptow.utils;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Helper {
+public class LocalDateConverter {
 
     public static Stream<LocalDate> createStreamFromYearMonth(YearMonth yearMonth){
         LocalDate startDate = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(),1);

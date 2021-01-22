@@ -12,11 +12,16 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
+@Builder
 public class AbsenceDTO {
 
     private String dates;
     private List<Child> children = new ArrayList<>();
+    private String childrenIds;
+    private String nextOccurrence;
     private String description;
+    private String startHours;
+    private String endHours;
+
 }

@@ -2,13 +2,13 @@ package pl.com.happyhouse.krzeptow.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.com.happyhouse.krzeptow.Helper;
 import pl.com.happyhouse.krzeptow.dto.AbsenceDTO;
 import pl.com.happyhouse.krzeptow.factory.NextMonthPresenceFactory;
 import pl.com.happyhouse.krzeptow.model.Child;
 import pl.com.happyhouse.krzeptow.model.Presence;
 import pl.com.happyhouse.krzeptow.model.User;
 import pl.com.happyhouse.krzeptow.repository.PresenceRepository;
+import pl.com.happyhouse.krzeptow.utils.LocalDateConverter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ public class PresenceService {
     private final NextMonthPresenceFactory nextMonthPresenceFactory;
     private final HolidayService holidayService;
     private final ChildService childService;
-
+    private final WeeklyCarePlanService weeklyCarePlanService;
 
     public Presence save(Presence presence) {
         return presenceRepository.save(presence);
@@ -73,6 +73,8 @@ public class PresenceService {
     }
 
     public List<Presence> registerAbsence(AbsenceDTO absenceDTO, User parent) {
+        extractChildrenList(absenceDTO);
+        weeklyCarePlanService.registerChanges(absenceDTO);
         List<Presence> absences = new ArrayList<>();
         List<String> datesList = splitIntoList(absenceDTO.getDates(), absenceDTO.getChildren().size());
         if (datesList.isEmpty()) return Collections.emptyList();
@@ -86,7 +88,7 @@ public class PresenceService {
     private List<Presence> getPresences(Child child, String dates, User parent, String description) {
         List<Presence> result = new ArrayList<>();
         if (dates.isEmpty()) return Collections.emptyList();
-        List<LocalDate> datesFromForm = Helper.stringToLocalDates(dates);
+        List<LocalDate> datesFromForm = LocalDateConverter.stringToLocalDates(dates);
         List<LocalDate> datesInPresenceEntity = getRealPresenceDatesBy(child);
         DatesSplitter.createDates(datesFromForm, datesInPresenceEntity);
 
@@ -133,12 +135,21 @@ public class PresenceService {
     private List<LocalDate> getDatesEntries() {
         YearMonth yearMonth = getLastMonthInDB().plusMonths(1);
         List<LocalDate> monthHolidays = holidayService.getHolidaysInYearMonth(yearMonth);
-        Stream<LocalDate> dateEntries = Helper.createStreamFromYearMonth(yearMonth);
+        Stream<LocalDate> dateEntries = LocalDateConverter.createStreamFromYearMonth(yearMonth);
         return dateEntries
                 .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SATURDAY))
                 .filter(date -> !date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
                 .filter(date -> !monthHolidays.contains(date))
                 .collect(Collectors.toList());
+    }
+
+    private void extractChildrenList(AbsenceDTO absenceDTO) {
+        List<Child> result = Arrays.stream(absenceDTO.getChildrenIds()
+                .split(","))
+                .mapToLong(Long::valueOf)
+                .mapToObj(childService::getById)
+                .collect(Collectors.toList());
+        absenceDTO.setChildren(result);
     }
 
     static class DatesSplitter {

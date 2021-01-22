@@ -7,6 +7,7 @@ import pl.com.happyhouse.krzeptow.factory.NextMonthPresenceFactory;
 import pl.com.happyhouse.krzeptow.model.Child;
 import pl.com.happyhouse.krzeptow.model.Presence;
 import pl.com.happyhouse.krzeptow.model.User;
+import pl.com.happyhouse.krzeptow.model.WeeklyCarePlan;
 import pl.com.happyhouse.krzeptow.repository.PresenceRepository;
 import pl.com.happyhouse.krzeptow.utils.LocalDateConverter;
 
@@ -74,7 +75,8 @@ public class PresenceService {
 
     public List<Presence> registerAbsence(AbsenceDTO absenceDTO, User parent) {
         extractChildrenList(absenceDTO);
-        weeklyCarePlanService.registerChanges(absenceDTO);
+        List<WeeklyCarePlan> weeklyCarePlanList = weeklyCarePlanService.registerWeekCarePlanChanges(absenceDTO);
+        updateWithNewCarePlan(weeklyCarePlanList);
         List<Presence> absences = new ArrayList<>();
         List<String> datesList = splitIntoList(absenceDTO.getDates(), absenceDTO.getChildren().size());
         if (datesList.isEmpty()) return Collections.emptyList();
@@ -98,14 +100,14 @@ public class PresenceService {
         return result;
     }
 
-    private List<Presence> createAbsences(Child child){
+    private List<Presence> createAbsences(Child child) {
         return DatesSplitter.datesToMakeAbsent.stream()
                 .map(d -> getByChildAndDate(child, d))
                 .map(this::makeAbsent)
                 .collect(Collectors.toList());
     }
 
-    private List<Presence> createPresences(Child child){
+    private List<Presence> createPresences(Child child) {
         return DatesSplitter.datesToMakePresent.stream()
                 .map(d -> getByChildAndDate(child, d))
                 .map(this::makePresent)
@@ -152,11 +154,19 @@ public class PresenceService {
         absenceDTO.setChildren(result);
     }
 
+    public void updateWithNewCarePlan(List<WeeklyCarePlan> plans) {
+        for (WeeklyCarePlan plan : plans) {
+            List<Presence> presenceList = presenceRepository.getByChildAndDateAfter(plan.getChild(), LocalDate.now());
+            presenceList
+                    .forEach(p -> p.setHours(weeklyCarePlanService.getHoursFor(plan, p.getDate().getDayOfWeek())));
+        }
+    }
+
     static class DatesSplitter {
         private static List<LocalDate> datesToMakePresent;
         private static List<LocalDate> datesToMakeAbsent;
 
-        public static void createDates(List<LocalDate> form, List<LocalDate> database){
+        public static void createDates(List<LocalDate> form, List<LocalDate> database) {
             datesToMakeAbsent = database;
             datesToMakePresent = form;
             List<LocalDate> common = new ArrayList<>(form);

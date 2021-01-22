@@ -18,5 +18,7 @@ public interface PresenceRepository extends JpaRepository<Presence, Long> {
     Optional<Presence> getMaxDate();
 
     List<Presence> getByChild(Child c);
+
+    List<Presence> getByChildAndDateAfter(Child child, LocalDate date);
 }
 

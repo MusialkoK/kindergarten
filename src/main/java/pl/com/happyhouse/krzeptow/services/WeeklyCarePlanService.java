@@ -22,6 +22,7 @@ public class WeeklyCarePlanService {
 
     private final WeeklyCarePlanRepository weeklyCarePlanRepository;
 
+
     public WeeklyCarePlan save(WeeklyCarePlan weeklyCarePlan) {
         return weeklyCarePlanRepository.save(weeklyCarePlan);
     }
@@ -50,7 +51,7 @@ public class WeeklyCarePlanService {
         } else return errorValue;
     }
 
-    public List<WeeklyCarePlan> registerChanges(AbsenceDTO absenceDTO) {
+    public List<WeeklyCarePlan> registerWeekCarePlanChanges(AbsenceDTO absenceDTO) {
         List<WeeklyCarePlan> result = new ArrayList<>();
         List<Child> children = absenceDTO.getChildren().stream()
                 .filter(c -> c.getDayCareStrategy().getType().equals(HOURLY))
@@ -73,6 +74,9 @@ public class WeeklyCarePlanService {
     private int hoursCount(LocalTime start, LocalTime end) {
         if (start != null && end != null) {
             return end.getHour() - start.getHour();
-        } else return 0;
+        } else if(start.equals(LocalTime.of(0,0)) && end.equals(LocalTime.of(0,0))){
+            return -1;
+        }
+        return 0;
     }
 }

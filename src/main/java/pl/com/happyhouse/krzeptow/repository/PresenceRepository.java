@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface PresenceRepository extends JpaRepository<Presence, Long> {
     Optional<Presence> getByChildAndDate(Child child, LocalDate date);
 
-    @Query(value = "SELECT max(date) FROM Presence ")
-    Optional<Presence> getMaxDate();
+    @Query(value = "SELECT max(date) FROM Presence", nativeQuery = true)
+    LocalDate getMaxDate();
 
     List<Presence> getByChild(Child c);
 

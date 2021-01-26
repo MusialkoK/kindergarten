@@ -13,7 +13,7 @@ public class HomeController {
 
     @GetMapping("")
     public String dashboard(){
-        return "home/home";
+        return "redirect:/parent";
     }
 
     @PostMapping("/contact")

@@ -58,7 +58,7 @@ public class ParentController {
 //        createDayCareStrategyPlans();
 //        weeklyCarePlanWithChildAssignment();
 //        createNextMontPresences();
-        return "parent/reports";
+        return "parent/dashboard";
     }
 
     @GetMapping("/mealchange")

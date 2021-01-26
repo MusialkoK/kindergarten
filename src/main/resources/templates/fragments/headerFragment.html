@@ -16,7 +16,7 @@
             <li><a href="/aboutUs">O nas</a></li>
             <li><a href="/home">Wydarzenia</a></li>
             <li sec:authorize="isAnonymous()"><a href="/login">Zaloguj</a></li>
-            <li sec:authorize="hasRole('ROLE_PARENT')"><a href="/parent">Panel użytkownika</a></li>
+            <li sec:authorize="hasRole('ROLE_PARENT')"><a href="/parent">Panel rodzica</a></li>
             <li sec:authorize="hasRole('ROLE_TEACHER')"><a href="/teacher">Panel nauczyciela</a></li>
             <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin">Panel administratora</a></li>
             <li sec:authorize="isAuthenticated()"><a href="/logout">Wyloguj</a></li>

@@ -43,9 +43,9 @@ public class PresenceService {
 
     public LocalDate getByMaxDate() {
         try {
-            Presence presence = presenceRepository.getMaxDate().orElseThrow();
-            return presence.getDate();
+            return presenceRepository.getMaxDate();
         } catch (Exception e) {
+            System.out.println("Date error");
             return LocalDate.now().minusMonths(1);
         }
     }
